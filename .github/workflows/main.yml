@@ -20,6 +20,10 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: "pip"
+      - name: Run ruff linter
+        run: | 
+          pip install ruff
+          ruff check .
 
       - name: Ejecutando tests unitarios
         run: |
