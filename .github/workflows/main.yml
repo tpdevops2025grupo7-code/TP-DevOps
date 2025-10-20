@@ -51,5 +51,11 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USER }}/users-api:${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKER_USER }}/users-api:${{ github.sha }}
+            ${{ secrets.DOCKER_USER }}/users-api:latest
           labels: ${{ steps.meta.outputs.labels }}
+  # deploy_to_render:
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: Desplegando cambios a render - Rama (${{ github.ref_name }})
