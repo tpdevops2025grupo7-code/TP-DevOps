@@ -51,5 +51,5 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USER }}/user-service:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USER }}/users-api:${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
