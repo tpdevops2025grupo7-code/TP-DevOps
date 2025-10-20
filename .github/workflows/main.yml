@@ -1,34 +1,55 @@
 name: TP_DevOps
 
-env: 
+env:
   PYTHON_VERSION: 3.13
 
 on:
   push:
-  pull_request: 
+  pull_request:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04 
+  build_and_test:
+    runs-on: ubuntu-22.04
     steps:
-
       - name: Usando rama ${{ github.ref_name }}
         uses: actions/checkout@v4
-      
       - name: Instalando Python v${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: "pip"
-        
       - name: Ejecutando linter (Ruff)
-        run: | 
+        run: |
           pip install ruff
           ruff check .
-
       - name: Ejecutando tests unitarios
         run: |
           pip install -r requirements.txt
           pytest
-      
+  push_to_docker_hub:
+    name: Publicando imagen a Docker hub
+    runs-on: ubuntu-22.04
+    needs: build_and_test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Usando rama ${{ github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Probando credenciales en Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+      - name: Extrayendo metadatos (tags, labels) para docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ github.repository }}
+      - name: Contruiyendo y publicando imagen de Docker
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USER }}/user-service:${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
