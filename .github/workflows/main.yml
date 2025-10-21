@@ -58,6 +58,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
   deploy_to_render:
     name: Deploy a render
+    needs: push_to_docker_hub
     runs-on: ubuntu-22.04
     steps:
       - name: deplegando cambios a render usando la Hook URL
