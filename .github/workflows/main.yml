@@ -10,6 +10,7 @@ on:
 
 jobs:
   build_and_test:
+    name: Ejecutando tests unitarios y linter
     runs-on: ubuntu-22.04
     steps:
       - name: Usando rama ${{ github.ref_name }}
@@ -55,7 +56,12 @@ jobs:
             ${{ secrets.DOCKER_USER }}/users-api:${{ github.sha }}
             ${{ secrets.DOCKER_USER }}/users-api:latest
           labels: ${{ steps.meta.outputs.labels }}
-  # deploy_to_render:
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     - name: Desplegando cambios a render - Rama (${{ github.ref_name }})
+  deploy_to_render:
+    name: Deploy a render
+    runs-on: ubuntu-22.04
+    steps:
+      - name: deplegando cambios a render usando la Hook URL
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
