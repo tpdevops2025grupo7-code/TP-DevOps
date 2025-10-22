@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from newrelic import agent
-import time, random, os
+import time
+import random
+import os
 
 agent.initialize(os.getenv('NEW_RELIC_CONFIG_FILE'))
 app = FastAPI()
@@ -27,7 +29,7 @@ def io_task():
 def cpu_task():
     for i in range(10000):
         n = i*i*i
-    return "CPU bound task finish!"
+    return f"CPU bound task finish! {n}"
 
 @app.get("/random_sleep")
 def random_sleep():
