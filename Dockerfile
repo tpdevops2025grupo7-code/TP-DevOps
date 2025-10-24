@@ -15,8 +15,7 @@ WORKDIR /app
 
 COPY --from=builder /install /usr/local
 
-COPY app/ .
-COPY newrelic.ini .
+COPY app/ newrelic.ini ./
 
 ENV NEW_RELIC_CONFIG_FILE=/app/newrelic.ini
 
