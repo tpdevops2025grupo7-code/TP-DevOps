@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  usersapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+    ports:
+      - "8000:8000"
+    environment:
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
