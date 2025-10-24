@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
 from newrelic import agent
 import time
@@ -37,8 +37,9 @@ def random_sleep():
     return "random sleep"
 
 @app.get("/random_status")
-def random_status():
+def random_status(response: Response):
     status_code = random.choice([200] * 6 + [300, 400, 400, 500])
+    response.status_code = status_code
     return f"Status code: {status_code}"
 
 members = [
