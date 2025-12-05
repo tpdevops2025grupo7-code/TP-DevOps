@@ -64,5 +64,6 @@ jobs:
       - name: deplegando cambios a render usando la Hook URL
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          docker_tag: ${{ github.sha }}
         run: |
-          curl "$deploy_url"
+          curl "$deploy_url&imgURL=docker.io/tpdevops2025grupo7/users-api:$docker_tag"
